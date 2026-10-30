@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORALE LIFE</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #10132b;
+  color: white;
+}
+header {
+  padding: 25px;
+  text-align: center;
+  background: linear-gradient(120deg,#673de6,#168bd2);
+}
+header h1 { margin: 0; color: #ffe45e; font-size: 36px; }
+header p { margin-bottom: 0; }
+main {
+  max-width: 850px;
+  margin: 25px auto;
+  padding: 15px;
+}
+.card {
+  background: #202747;
+  border: 1px solid #35416b;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+h2 { color: #ffe45e; }
+input {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 0;
+  font-size: 16px;
+  margin: 8px 0;
+}
+button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #ffe45e;
+  color: #202040;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+.task {
+  background: #303b61;
+  margin: 9px 0;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.task button { background: #ff7373; }
+#points { color: #ffe45e; font-size: 25px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌟 ORALE LIFE</h1>
+  <p>نظّم يومك وحقق أهدافك!</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>👋 مرحبًا بك!</h2>
+    <p>ابدأ يومك بخطوة صغيرة نحو النجاح.</p>
+    <p>⭐ نقاطك: <span id="points">0</span></p>
+  </section>
+
+  <section class="card">
+    <h2>📝 مهامي اليومية</h2>
+    <input id="taskInput" placeholder="اكتب مهمة جديدة...">
+    <button onclick="addTask()">إضافة مهمة +</button>
+    <div id="taskList"></div>
+  </section>
+
+  <section class="card">
+    <h2>⏱️ مؤقّت التركيز</h2>
+    <p id="timer">25:00</p>
+    <button onclick="startTimer()">ابدأ</button>
+    <button onclick="pauseTimer()">إيقاف</button>
+    <button onclick="resetTimer()">إعادة</button>
+  </section>
+
+  <section class="card">
+    <h2>🎯 هدف اليوم</h2>
+    <p>أنجز مهمة واحدة على الأقل اليوم!</p>
+  </section>
+</main>
+
+<script>
+let points = 0;
+let seconds = 25 * 60;
+let timerInterval = null;
+
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const value = input.value.trim();
+  if (!value) return;
+
+  const task = document.createElement("div");
+  task.className = "task";
+
+  const name = document.createElement("span");
+  name.textContent = value;
+
+  const done = document.createElement("button");
+  done.textContent = "تم ✓";
+  done.onclick = () => {
+    points += 10;
+    document.getElementById("points").textContent = points;
+    task.remove();
+  };
+
+  task.append(name, done);
+  document.getElementById("taskList").appendChild(task);
+  input.value = "";
+}
+
+function updateTimer() {
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+  document.getElementById("timer").textContent =
+    String(minutes).padStart(2,"0") + ":" +
+    String(remaining).padStart(2,"0");
+}
+
+function startTimer() {
+  if (timerInterval !== null || seconds === 0) return;
+  timerInterval = setInterval(() => {
+    seconds--;
+    updateTimer();
+    if (seconds <= 0) {
+      pauseTimer();
+      alert("أحسنت! انتهت جلسة التركيز 🎉");
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function resetTimer() {
+  pauseTimer();
+  seconds = 25 * 60;
+  updateTimer();
+}
+
+updateTimer();
+</script>
+</body>
+</html>
